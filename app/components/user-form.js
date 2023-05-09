@@ -21,9 +21,19 @@ export const UserTable = ({ open, setOpen }) => {
 
     const form = e.target;
     const formData = new FormData(form);
-    //fetch('https://645a6c8b65bd868e931ab62d.mockapi.io/users', { method: form.method, body: formData });
+    const formJson = Object.fromEntries(formData.entries());
 
-    console.log(formJson);
+
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formJson)
+    };
+    fetch('https://645a6c8b65bd868e931ab62d.mockapi.io/users', requestOptions)
+      .then(response => response.json())
+      .then(data => handleClose());
+
+
   }
 
   const handleRoleChange = (e) => {
@@ -79,7 +89,7 @@ export const UserTable = ({ open, setOpen }) => {
                 value={role}
                 label="Age"
                 onChange={handleRoleChange}
-                margin='normal'
+
                 style={{ borderRadius: "8px" }}
               >
                 <MenuItem sx={{ borderBottom: "2px solid #F5F5F7" }} value={"Contributor"}>Contributor</MenuItem>
@@ -93,7 +103,6 @@ export const UserTable = ({ open, setOpen }) => {
               <RadioGroup
                 row
                 sx={{ justifyContent: "space-between" }}
-
                 aria-labelledby="demo-row-radio-buttons-group-label"
                 name="avatar"
               >
@@ -139,7 +148,7 @@ export const UserTable = ({ open, setOpen }) => {
           </DialogContent>
 
           <DialogActions sx={{ justifyContent: "center", mb: "10px" }}>
-            <Button type='submit' variant='contained' onClick={handleClose} sx={{ backgroundColor: "#2940D3", fontWeight: 600, py: "12px", px: "24px" }}>Create User</Button>
+            <Button type='submit' variant='contained' sx={{ backgroundColor: "#2940D3", fontWeight: 600, py: "12px", px: "24px" }}>Create User</Button>
           </DialogActions>
         </form>
       </Dialog>

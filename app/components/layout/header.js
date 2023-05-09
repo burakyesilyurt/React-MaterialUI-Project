@@ -18,11 +18,12 @@ export const Header = () => {
   const handleClickOpen = () => {
     setOpen(true)
   }
+
   return (
     <>
       <AppBar position="static" color="transparent" sx={{ boxShadow: "none" }}>
         <Toolbar sx={{ justifyContent: "space-between" }}>
-          <Button variant='text' startIcon={<Image src={logo} />} sx={{ color: "#3A3C40", fontWeight: 600 }}>Users</Button>
+          <Button variant='text' startIcon={<Image src={logo} alt='logo' />} sx={{ color: "#3A3C40", fontWeight: 600 }}>Users</Button>
 
           <Box sx={{ bgcolor: 'background.paper' }}>
             <Tabs value={value} onChange={handleChange} centered
