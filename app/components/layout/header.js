@@ -3,16 +3,21 @@ import { AppBar, Toolbar, Typography, Button, Box, Tabs, Tab } from "@mui/materi
 import logo from "@/public/svgs/logo.svg"
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { useState } from 'react';
-
+import { UserTable } from "../user-form"
 
 
 export const Header = () => {
 
   const [value, setValue] = useState(0);
+  const [open, setOpen] = useState(false);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  const handleClickOpen = () => {
+    setOpen(true)
+  }
   return (
     <>
       <AppBar position="static" color="transparent" sx={{ boxShadow: "none" }}>
@@ -34,7 +39,7 @@ export const Header = () => {
             </Tabs>
           </Box>
           <Box>
-            <Button variant='contained' startIcon={<AddCircleIcon />} sx={{ backgroundColor: "#2940D3", fontWeight: 600 }}>Add New User</Button>
+            <Button variant='contained' onClick={handleClickOpen} startIcon={<AddCircleIcon />} sx={{ backgroundColor: "#2940D3", fontWeight: 600 }}>Add New User</Button>
           </Box>
         </Toolbar>
       </AppBar >
@@ -42,8 +47,8 @@ export const Header = () => {
         borderBottom: "2px solid #BABFC5", position: 'relative', top
           : -8, zIndex: -1
       }}>
-
       </Box>
+      <UserTable open={open} setOpen={setOpen} />
     </>
   )
 }

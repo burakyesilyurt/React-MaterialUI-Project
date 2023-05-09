@@ -166,4 +166,3 @@ function Pagination({ page, onPageChange, className }) {
     />
   );
 }
-
