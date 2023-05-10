@@ -6,9 +6,36 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { DataGrid, GridPagination, useGridApiContext, useGridSelector, gridPageCountSelector } from '@mui/x-data-grid';
 import MuiPagination from '@mui/material/Pagination';
+import Avatar from '@mui/material/Avatar';
+import { EditUserTable } from "./edit-user-from"
+import { MainContext, useContext } from "../context"
+import { useEffect, useState } from "react";
+
 
 
 export const TableLayout = () => {
+  const { datas, setDatas } = useContext(MainContext)
+  const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch("https://645a6c8b65bd868e931ab62d.mockapi.io/users");
+      const json = await response.json();
+      setDatas(json);
+      console.log(json)
+    }
+    fetchData();
+  }, [])
+
+  const filtered = datas.filter((item) => {
+    if (typeof item.username === 'string') {
+      return item.username.toLowerCase().includes(search.toLowerCase()) || item.email.toLowerCase().includes(search.toLowerCase())
+    }
+  });
+
+
+
+
   return (
     <>
       <Stack sx={{ my: "12px", width: "85vw" }} direction="row" justifyContent="space-between">
@@ -19,6 +46,8 @@ export const TableLayout = () => {
           <InputBase
             sx={{ ml: 1, flex: 1 }}
             placeholder="Search"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
           />
         </Box>
         <Box>
@@ -28,7 +57,7 @@ export const TableLayout = () => {
         </Box>
 
       </Stack>
-      <DataGridDemo />
+      <DataGridDemo filteredData={filtered} />
     </>
   )
 }
@@ -36,10 +65,17 @@ export const TableLayout = () => {
 const columns = [
 
   {
-    field: 'img', headerName: 'Avatar', flex: 0
+    field: 'avatar', headerName: 'Avatar', flex: 0, renderCell: (params) => {
+      //console.log(params.formattedValue);
+      return (
+        <>
+          <Avatar variant="square" src={`/img/Image${params.formattedValue}.png`} alt="avatar" />
+        </>
+      );
+    }
   },
   {
-    field: 'name',
+    field: 'fullname',
     headerName: 'Name',
     flex: 1,
     editable: true
@@ -69,20 +105,35 @@ const columns = [
     sortable: false,
     disableClickEventBubbling: true,
     renderCell: (params) => {
+      const { datas, setDatas } = useContext(MainContext);
+      const [openEdit, setOpenEdit] = useState(false);
+      const [userEditData, setUserEditData] = useState({})
       const onClick = (e) => {
         const currentRow = params.row;
-        return alert(JSON.stringify(currentRow, null, 4));
+        setOpenEdit(true)
+        setUserEditData(currentRow)
+      };
+      const deleteItem = (e) => {
+        const currentRow = params.row;
+        const id = currentRow.id;
+        fetch(`https://645a6c8b65bd868e931ab62d.mockapi.io/users/${id}`, { method: "DELETE" })
+          .then(() => setDatas((items) =>
+            items.filter((item) => item.id !== id)
+          ));
       };
 
       return (
-        <Stack direction="row" spacing={1}>
-          <IconButton aria-label="delete" onClick={onClick}>
-            <EditIcon />
-          </IconButton>
-          <IconButton aria-label="edit" onClick={onClick}>
-            <DeleteIcon />
-          </IconButton>
-        </Stack>
+        <>
+          <Stack direction="row" spacing={1}>
+            <IconButton aria-label="edit" onClick={onClick}>
+              <EditIcon />
+            </IconButton>
+            <IconButton aria-label="delete" onClick={deleteItem}>
+              <DeleteIcon />
+            </IconButton>
+          </Stack>
+          <EditUserTable openEdit={openEdit} setOpenEdit={setOpenEdit} userData={userEditData} />
+        </>
       );
     },
   }
@@ -117,10 +168,11 @@ function CustomPagination(props) {
 
 }
 
-const DataGridDemo = () => {
+const DataGridDemo = ({ filteredData }) => {
+
   const data = {
     columns: [...columns],
-    rows: [...rows]
+    rows: [...filteredData]
   }
 
   return (
@@ -138,7 +190,7 @@ const DataGridDemo = () => {
           ...data.initialState,
           pagination: { paginationModel: { pageSize: 10 } },
         }}
-
+        pageSizeOptions={[10]}
         checkboxSelection
         disableRowSelectionOnClick
       />

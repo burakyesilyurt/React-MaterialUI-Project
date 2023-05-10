@@ -4,15 +4,26 @@ import { Button, TextField, Dialog, DialogActions, DialogContent, InputLabel, Me
 import { MainContext, useContext } from "../context"
 import { useState } from 'react';
 
-export const UserTable = ({ open, setOpen }) => {
+export const EditUserTable = ({ openEdit, setOpenEdit, userData }) => {
   const { datas, setDatas } = useContext(MainContext)
   const [role, setRole] = useState("")
 
-  const handleClose = (data) => {
-    setOpen(false)
-    setRole("")
-    setDatas(() => [...datas, data])
+  const handleClose = (data, formJson) => {
+    setOpenEdit(false)
+    console.log(data)
+    //setDatas(() => [...datas, data])
+    handleEditData(userData.id, formJson)
   }
+
+  const handleEditData = (id, formJson) => {
+    const newDatas = datas.map((user) => {
+      if (user.id === id) {
+        return { ...user, ...formJson };
+      }
+      return user;
+    });
+    setDatas(newDatas);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -23,14 +34,13 @@ export const UserTable = ({ open, setOpen }) => {
 
 
     const requestOptions = {
-      method: 'POST',
+      method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(formJson)
     };
-    fetch('https://645a6c8b65bd868e931ab62d.mockapi.io/users', requestOptions)
+    fetch(`https://645a6c8b65bd868e931ab62d.mockapi.io/users/${userData.id}`, requestOptions)
       .then(response => response.json())
-      .then(data => handleClose(data));
-
+      .then(data => handleClose(data, formJson));
 
   }
 
@@ -40,7 +50,7 @@ export const UserTable = ({ open, setOpen }) => {
 
   return (
     <>
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog open={openEdit} onClose={handleClose}>
         <form onSubmit={handleSubmit} method='post'>
           <DialogContent sx={{ py: "40px" }}>
 
@@ -48,6 +58,7 @@ export const UserTable = ({ open, setOpen }) => {
               InputLabelProps={{ required: false }}
               required
               autoFocus
+              defaultValue={userData.fullname}
               name='fullname'
               margin="dense"
               id="fullname"
@@ -61,6 +72,7 @@ export const UserTable = ({ open, setOpen }) => {
             <TextField
               InputLabelProps={{ required: false }}
               required
+              defaultValue={userData.username}
               name='username'
               margin="dense"
               id="username"
@@ -74,6 +86,7 @@ export const UserTable = ({ open, setOpen }) => {
             <TextField
               InputLabelProps={{ required: false }}
               required
+              defaultValue={userData.email}
               margin="dense"
               name="email"
               id="email"
@@ -87,10 +100,11 @@ export const UserTable = ({ open, setOpen }) => {
             <FormControl required sx={{ mb: "28px" }} fullWidth>
               <InputLabel id="demo-simple-select-label">Role</InputLabel>
               <Select
+                defaultValue={userData.role}
                 name="role"
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
-                value={role}
+
                 label="Age"
                 onChange={handleRoleChange}
                 style={{ borderRadius: "8px" }}

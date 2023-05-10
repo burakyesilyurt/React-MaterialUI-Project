@@ -22,3 +22,11 @@
 .css-1pi9rcw-MuiButtonBase-root-MuiPaginationItem-root.Mui-selected {
   background-color: #2940D3;
 }
+
+.MuiFormLabel-asterisk {
+  display: none;
+}
+
+.MuiFormControlLabel-asterisk {
+  display: none;
+}
