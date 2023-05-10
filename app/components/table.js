@@ -7,7 +7,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { DataGrid, GridPagination, useGridApiContext, useGridSelector, gridPageCountSelector } from '@mui/x-data-grid';
 import MuiPagination from '@mui/material/Pagination';
 import Avatar from '@mui/material/Avatar';
-import { EditUserTable } from "./edit-user-from"
+import { EditUserTable } from "./edit-user-form"
 import { MainContext, useContext } from "../context"
 import { useEffect, useState } from "react";
 
@@ -32,7 +32,6 @@ export const TableLayout = () => {
       return item.username.toLowerCase().includes(search.toLowerCase()) || item.email.toLowerCase().includes(search.toLowerCase())
     }
   });
-
 
 
 

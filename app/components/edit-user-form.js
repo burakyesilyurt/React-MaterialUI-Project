@@ -10,7 +10,6 @@ export const EditUserTable = ({ openEdit, setOpenEdit, userData }) => {
 
   const handleClose = (data, formJson) => {
     setOpenEdit(false)
-    console.log(data)
     //setDatas(() => [...datas, data])
     handleEditData(userData.id, formJson)
   }
@@ -165,7 +164,7 @@ export const EditUserTable = ({ openEdit, setOpenEdit, userData }) => {
           </DialogContent>
 
           <DialogActions sx={{ justifyContent: "center", mb: "10px" }}>
-            <Button type='submit' variant='contained' sx={{ backgroundColor: "#2940D3", fontWeight: 600, py: "12px", px: "24px" }}>Create User</Button>
+            <Button type='submit' variant='contained' sx={{ backgroundColor: "#2940D3", fontWeight: 600, py: "12px", px: "24px" }}>Update User</Button>
           </DialogActions>
         </form>
       </Dialog>
