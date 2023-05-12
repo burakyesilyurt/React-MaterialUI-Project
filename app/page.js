@@ -9,9 +9,12 @@ import { useState } from "react";
 export default function Home() {
 
   const [datas, setDatas] = useState([])
+  const [filteredData, setFilteredData] = useState([])
   const data = {
     datas,
-    setDatas
+    setDatas,
+    filteredData,
+    setFilteredData
   }
   return (
     <MainContext.Provider value={data}>

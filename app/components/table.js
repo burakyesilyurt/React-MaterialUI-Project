@@ -14,7 +14,7 @@ import { useEffect, useState } from "react";
 
 
 export const TableLayout = () => {
-  const { datas, setDatas } = useContext(MainContext)
+  const { datas, setDatas, filteredData, setFilteredData } = useContext(MainContext)
   const [search, setSearch] = useState("");
 
   useEffect(() => {
@@ -27,12 +27,14 @@ export const TableLayout = () => {
     fetchData();
   }, [])
 
-  const filtered = datas.filter((item) => {
-    if (typeof item.username === 'string') {
-      return item.username.toLowerCase().includes(search.toLowerCase()) || item.email.toLowerCase().includes(search.toLowerCase())
-    }
-  });
 
+  useEffect(() => {
+    setFilteredData(datas.filter((item) => {
+      if (typeof item.username === 'string') {
+        return item.username.toLowerCase().includes(search.toLowerCase()) || item.email.toLowerCase().includes(search.toLowerCase())
+      }
+    }))
+  }, [search, datas])
 
 
   return (
@@ -56,7 +58,7 @@ export const TableLayout = () => {
         </Box>
 
       </Stack>
-      <DataGridDemo filteredData={filtered} />
+      <DataGridDemo />
     </>
   )
 }
@@ -138,27 +140,6 @@ const columns = [
   }
 ];
 
-const rows = [
-  { id: 0, img: 1, name: 'Snow', username: 'Jon', email: "asdsadsadsad@asdsad.com", role: "admin" },
-  { id: 1, img: 2, name: 'Lannister', username: 'Cersei', email: "asdsadsadsad@asdsad.com", role: "admin" },
-  { id: 2, img: 3, name: 'Lannister', username: 'Jaime', email: "asdsadsadsad@asdsad.com", role: "admin" },
-  { id: 3, img: 4, name: 'Stark', username: 'Arya', email: "asdsadsadsad@asdsad.com", role: "admin" },
-  { id: 4, img: 5, name: 'Targaryen', username: 'Daenerys', email: null },
-  { id: 5, img: 6, name: 'Melisandre', username: null, email: "asdsadsadsad@asdsad.com", role: "admin" },
-  { id: 6, img: 7, name: 'Clifford', username: 'Ferrara', email: "asdsadsadsad@asdsad.com", role: "admin" },
-  { id: 7, img: 8, name: 'Frances', username: 'Rossini', email: "asdsadsadsad@asdsad.com", role: "admin" },
-  { id: 8, img: 9, name: 'Roxie', username: 'Harvey', email: "asdsadsadsad@asdsad.com", role: "admin" },
-  { id: 9, img: 10, name: 'Roxiee', username: 'Harvey', email: "asdsadsadsad@asdsad.com", role: "admin" },
-  { id: 10, img: 10, name: 'Roxiee', username: 'Harvey', email: "asdsadsadsad@asdsad.com", role: "admin" },
-  { id: 11, img: 10, name: 'Roxiee', username: 'Harvey', email: "asdsadsadsad@asdsad.com", role: "admin" },
-  { id: 12, img: 10, name: 'Roxiee', username: 'Harvey', email: "asdsadsadsad@asdsad.com", role: "admin" },
-  { id: 13, img: 10, name: 'Roxiee', username: 'Harvey', email: "asdsadsadsad@asdsad.com", role: "admin" },
-  { id: 14, img: 10, name: 'Roxiee', username: 'Harvey', email: "asdsadsadsad@asdsad.com", role: "admin" },
-  { id: 15, img: 10, name: 'Roxiee', username: 'Harvey', email: "asdsadsadsad@asdsad.com", role: "admin" },
-  { id: 16, img: 10, name: 'Roxiee', username: 'Harvey', email: "asdsadsadsad@asdsad.com", role: "admin" },
-  { id: 17, img: 10, name: 'Roxiee', username: 'Harvey', email: "asdsadsadsad@asdsad.com", role: "admin" },
-  { id: 18, img: 10, name: 'Roxiee', username: 'Harvey', email: "asdsadsadsad@asdsad.com", role: "admin" },
-];
 
 
 
@@ -167,7 +148,8 @@ function CustomPagination(props) {
 
 }
 
-const DataGridDemo = ({ filteredData }) => {
+const DataGridDemo = () => {
+  const { filteredData } = useContext(MainContext)
 
   const data = {
     columns: [...columns],

@@ -4,20 +4,47 @@ import logo from "@/public/svgs/logo.svg"
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { useState } from 'react';
 import { UserTable } from "../user-form"
+import { MainContext, useContext } from "../../context"
 
 
 export const Header = () => {
-
+  const { datas, setFilteredData } = useContext(MainContext)
   const [value, setValue] = useState(0);
   const [open, setOpen] = useState(false);
 
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
+    const filterByRole = (role) => {
+      setFilteredData(datas.filter((item) => {
+        if (typeof item.role === 'string') {
+          return item.role.includes(role)
+        }
+      }))
+    }
+    switch (newValue) {
+      case 1:
+        filterByRole("Contributor")
+        break;
+      case 2:
+        filterByRole("Author")
+        break;
+      case 3:
+        filterByRole("Administrator")
+        break;
+      case 4:
+        filterByRole("Subscriber")
+        break;
+      default:
+        filterByRole("")
+    }
   };
 
   const handleClickOpen = () => {
     setOpen(true)
   }
+
+
 
   return (
     <>
