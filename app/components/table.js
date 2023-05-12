@@ -26,11 +26,10 @@ export const TableLayout = () => {
         if (item.role.startsWith("role")) {
           return { ...item, role: "Subscriber", avatar: "3" };
         }
-
         return item;
       });
       setDatas(updatedData);
-      console.log(json)
+      console.log(updatedData)
     }
     fetchData();
   }, [])
