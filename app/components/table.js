@@ -16,12 +16,20 @@ import { useEffect, useState } from "react";
 export const TableLayout = () => {
   const { datas, setDatas, filteredData, setFilteredData } = useContext(MainContext)
   const [search, setSearch] = useState("");
+  const [rowSelectionModel, setRowSelectionModel] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch("https://645a6c8b65bd868e931ab62d.mockapi.io/users");
       const json = await response.json();
-      setDatas(json);
+      const updatedData = json.map(item => {
+        if (item.role.startsWith("role")) {
+          return { ...item, role: "Subscriber", avatar: "3" };
+        }
+
+        return item;
+      });
+      setDatas(updatedData);
       console.log(json)
     }
     fetchData();
@@ -36,6 +44,21 @@ export const TableLayout = () => {
     }))
   }, [search, datas])
 
+
+  const deleteSelectedItems = (ids) => {
+    if (!ids) return;
+
+
+
+    ids.forEach(async (id) => {
+      const response = await fetch(`https://645a6c8b65bd868e931ab62d.mockapi.io/users/${id}`, { method: "DELETE" });
+      const json = await response.json();
+      setDatas((current) =>
+        current.filter((data) => data.id !== id)
+      );
+
+    })
+  }
 
   return (
     <>
@@ -52,16 +75,18 @@ export const TableLayout = () => {
           />
         </Box>
         <Box>
-          <Button startIcon={<DeleteIcon />} size="large" color="inherit" sx={{ color: "#82868C", fontWeight: 600 }}>
+          <Button onClick={() => deleteSelectedItems(rowSelectionModel)} startIcon={<DeleteIcon />} size="large" color="inherit" sx={{ color: "#82868C", fontWeight: 600 }}>
             Delete
           </Button>
         </Box>
 
       </Stack>
-      <DataGridDemo />
+      <DataGridDemo rowSelectionModel={rowSelectionModel} setRowSelectionModel={setRowSelectionModel} />
     </>
   )
 }
+
+
 
 const columns = [
 
@@ -148,7 +173,7 @@ function CustomPagination(props) {
 
 }
 
-const DataGridDemo = () => {
+const DataGridDemo = ({ rowSelectionModel, setRowSelectionModel }) => {
   const { filteredData } = useContext(MainContext)
 
   const data = {
@@ -174,6 +199,10 @@ const DataGridDemo = () => {
         pageSizeOptions={[10]}
         checkboxSelection
         disableRowSelectionOnClick
+        onRowSelectionModelChange={(newRowSelectionModel) => {
+          setRowSelectionModel(newRowSelectionModel);
+        }}
+        rowSelectionModel={rowSelectionModel}
       />
     </Box>
   );
