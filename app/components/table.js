@@ -29,7 +29,7 @@ export const TableLayout = () => {
         return item;
       });
       setDatas(updatedData);
-      console.log(updatedData)
+      console.log("Datas : ", updatedData)
     }
     fetchData();
   }, [])
@@ -80,7 +80,7 @@ export const TableLayout = () => {
         </Box>
 
       </Stack>
-      <DataGridDemo rowSelectionModel={rowSelectionModel} setRowSelectionModel={setRowSelectionModel} />
+      <DataGridTable rowSelectionModel={rowSelectionModel} setRowSelectionModel={setRowSelectionModel} />
     </>
   )
 }
@@ -172,7 +172,7 @@ function CustomPagination(props) {
 
 }
 
-const DataGridDemo = ({ rowSelectionModel, setRowSelectionModel }) => {
+const DataGridTable = ({ rowSelectionModel, setRowSelectionModel }) => {
   const { filteredData } = useContext(MainContext)
 
   const data = {
