@@ -8,6 +8,16 @@ React MaterialUI is a simple web application built with Next.js. MockAPI is used
 ## Features
 - DataGrid: Users can view, modify, delete, and filter users on the data grid.
 - Add New Users: users can create new user
+
+## API Endpoint
+https://645a6c8b65bd868e931ab62d.mockapi.io/
+
+| MEDHOD  | URL |
+| ------------- | ------------- |
+| GET  | `/users`       |
+| POST  | `/users`      |
+| PUT  | `/users/:id`   |
+| DELETE  | `/users/:id`|
 ## Getting started
 
 ### Prerequisites
